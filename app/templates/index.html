@@ -1,0 +1,226 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Expense Tracker{% endblock %}
+
+{% block content %}
+<!-- Add Expense Form -->
+<div class="card">
+    <div class="card-header">
+        ➕ Add New Expense
+    </div>
+    
+    <form id="expenseForm">
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="amount">Amount ($) *</label>
+                <input type="number" id="amount" name="amount" step="0.01" min="0.01" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="category">Category *</label>
+                <input type="text" id="category" name="category" list="categoryList" required placeholder="e.g., Food, Transport">
+                <datalist id="categoryList">
+                    {% for cat in categories %}
+                    <option value="{{ cat }}">
+                    {% endfor %}
+                </datalist>
+            </div>
+            
+            <div class="form-group">
+                <label for="date">Date *</label>
+                <input type="date" id="date" name="date" required>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" name="description" placeholder="Optional: Add details about this expense"></textarea>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">
+            💾 Add Expense
+        </button>
+    </form>
+    
+    <div id="alertContainer"></div>
+</div>
+
+<!-- Filter Section -->
+<div class="card">
+    <div class="card-header">
+        🔍 Filter Expenses
+    </div>
+    
+    <form id="filterForm" class="filter-section">
+        <div class="filter-grid">
+            <div class="form-group">
+                <label for="filterCategory">Category</label>
+                <select id="filterCategory" name="category">
+                    <option value="">All Categories</option>
+                    {% for cat in categories %}
+                    <option value="{{ cat }}" {% if selected_category == cat %}selected{% endif %}>{{ cat }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="startDate">Start Date</label>
+                <input type="date" id="startDate" name="start_date" value="{{ start_date or '' }}">
+            </div>
+            
+            <div class="form-group">
+                <label for="endDate">End Date</label>
+                <input type="date" id="endDate" name="end_date" value="{{ end_date or '' }}">
+            </div>
+            
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Apply Filters</button>
+            </div>
+            
+            <div class="form-group">
+                <button type="button" id="clearFilters" class="btn btn-secondary">Clear Filters</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Expenses List -->
+<div class="card">
+    <div class="card-header">
+        📋 All Expenses
+        <span class="badge badge-primary">{{ expenses|length }} expenses</span>
+    </div>
+    
+    {% if expenses %}
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Category</th>
+                    <th>Description</th>
+                    <th style="text-align: right;">Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for expense in expenses %}
+                <tr>
+                    <td>
+                        <strong>{{ expense.date.strftime('%b %d, %Y') }}</strong>
+                    </td>
+                    <td>
+                        <span class="badge badge-primary">{{ expense.category }}</span>
+                    </td>
+                    <td>{{ expense.description or '—' }}</td>
+                    <td style="text-align: right; font-weight: 600; color: var(--primary-color);">
+                        ${{ "%.2f"|format(expense.amount) }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr style="background: var(--bg-color); font-weight: 700;">
+                    <td colspan="3" style="text-align: right;">TOTAL:</td>
+                    <td style="text-align: right; color: var(--primary-color); font-size: 1.1rem;">
+                        ${{ "%.2f"|format(expenses|sum(attribute='amount')) }}
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+        <h3>No expenses found</h3>
+        <p>Add your first expense using the form above!</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Set today's date as default
+    document.getElementById('date').valueAsDate = new Date();
+
+    // Handle form submission
+    document.getElementById('expenseForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const formData = {
+            amount: parseFloat(document.getElementById('amount').value),
+            category: document.getElementById('category').value,
+            date: document.getElementById('date').value,
+            description: document.getElementById('description').value
+        };
+        
+        try {
+            const response = await fetch('/add_expense', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+            });
+            
+            const result = await response.json();
+            
+            if (response.ok) {
+                showAlert('Expense added successfully! 🎉', 'success');
+                document.getElementById('expenseForm').reset();
+                document.getElementById('date').valueAsDate = new Date();
+                
+                // Reload page after 1 second to show new expense
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
+            } else {
+                showAlert('Error: ' + result.detail, 'error');
+            }
+        } catch (error) {
+            showAlert('Error adding expense: ' + error.message, 'error');
+        }
+    });
+
+    // Handle filter form
+    document.getElementById('filterForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        const category = document.getElementById('filterCategory').value;
+        const startDate = document.getElementById('startDate').value;
+        const endDate = document.getElementById('endDate').value;
+        
+        const params = new URLSearchParams();
+        if (category) params.append('category', category);
+        if (startDate) params.append('start_date', startDate);
+        if (endDate) params.append('end_date', endDate);
+        
+        window.location.href = '/?' + params.toString();
+    });
+
+    // Clear filters
+    document.getElementById('clearFilters').addEventListener('click', () => {
+        window.location.href = '/';
+    });
+
+    function showAlert(message, type) {
+        const alertContainer = document.getElementById('alertContainer');
+        const alertClass = type === 'success' ? 'alert-success' : 'alert-error';
+        const icon = type === 'success' ? '✓' : '✕';
+        
+        alertContainer.innerHTML = `
+            <div class="alert ${alertClass}">
+                <span>${icon}</span>
+                <span>${message}</span>
+            </div>
+        `;
+        
+        setTimeout(() => {
+            alertContainer.innerHTML = '';
+        }, 5000);
+    }
+</script>
+{% endblock %}
+

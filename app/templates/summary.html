@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+
+{% block title %}Summary - Expense Tracker{% endblock %}
+
+{% block content %}
+<!-- Filter Section -->
+<div class="card">
+    <div class="card-header">
+        🔍 Filter Summary
+    </div>
+    
+    <form id="filterForm" class="filter-section">
+        <div class="filter-grid">
+            <div class="form-group">
+                <label for="filterCategory">Category</label>
+                <select id="filterCategory" name="category">
+                    <option value="">All Categories</option>
+                    {% for cat in categories %}
+                    <option value="{{ cat }}" {% if selected_category == cat %}selected{% endif %}>{{ cat }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="startDate">Start Date</label>
+                <input type="date" id="startDate" name="start_date" value="{{ start_date or '' }}">
+            </div>
+            
+            <div class="form-group">
+                <label for="endDate">End Date</label>
+                <input type="date" id="endDate" name="end_date" value="{{ end_date or '' }}">
+            </div>
+            
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Apply Filters</button>
+            </div>
+            
+            <div class="form-group">
+                <button type="button" id="clearFilters" class="btn btn-secondary">Clear Filters</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Summary Cards -->
+<div class="summary-grid">
+    <div class="summary-card">
+        <h3>💵 Total Expenses</h3>
+        <div class="value">${{ "%.2f"|format(summary.total_expenses) }}</div>
+        <div class="label">Across all categories</div>
+    </div>
+    
+    <div class="summary-card" style="background: linear-gradient(135deg, #10b981, #059669);">
+        <h3>📊 Total Transactions</h3>
+        <div class="value">{{ summary.total_count }}</div>
+        <div class="label">Expense entries</div>
+    </div>
+    
+    <div class="summary-card" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+        <h3>🏷️ Categories</h3>
+        <div class="value">{{ summary.category_breakdown|length }}</div>
+        <div class="label">Unique categories</div>
+    </div>
+</div>
+
+<!-- Category Breakdown -->
+<div class="card">
+    <div class="card-header">
+        📈 Category Breakdown
+    </div>
+    
+    {% if summary.category_breakdown %}
+    <ul class="category-list">
+        {% for category in summary.category_breakdown %}
+        <li class="category-item">
+            <div class="category-info">
+                <div class="category-icon">
+                    {{ category.category[0].upper() }}
+                </div>
+                <div class="category-details">
+                    <h4>{{ category.category }}</h4>
+                    <p>{{ category.count }} transaction{% if category.count != 1 %}s{% endif %}</p>
+                </div>
+            </div>
+            <div class="category-amount">
+                <div class="amount">${{ "%.2f"|format(category.total) }}</div>
+                <div style="font-size: 0.85rem; color: var(--text-secondary);">
+                    {% if summary.total_expenses > 0 %}
+                    {{ "%.1f"|format((category.total / summary.total_expenses) * 100) }}% of total
+                    {% endif %}
+                </div>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <div class="empty-state">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+        </svg>
+        <h3>No data available</h3>
+        <p>Add some expenses to see your spending breakdown!</p>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Visual Chart -->
+{% if summary.category_breakdown %}
+<div class="card">
+    <div class="card-header">
+        📊 Visual Distribution
+    </div>
+    
+    <div style="padding: 1rem 0;">
+        {% for category in summary.category_breakdown %}
+        {% set percentage = (category.total / summary.total_expenses * 100) if summary.total_expenses > 0 else 0 %}
+        <div style="margin-bottom: 1.5rem;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                <span style="font-weight: 600;">{{ category.category }}</span>
+                <span style="color: var(--text-secondary);">${{ "%.2f"|format(category.total) }} ({{ "%.1f"|format(percentage) }}%)</span>
+            </div>
+            <div style="background: var(--bg-color); border-radius: 9999px; height: 12px; overflow: hidden;">
+                <div style="background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); height: 100%; width: {{ percentage }}%; transition: width 0.5s ease;"></div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Handle filter form
+    document.getElementById('filterForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        const category = document.getElementById('filterCategory').value;
+        const startDate = document.getElementById('startDate').value;
+        const endDate = document.getElementById('endDate').value;
+        
+        const params = new URLSearchParams();
+        if (category) params.append('category', category);
+        if (startDate) params.append('start_date', startDate);
+        if (endDate) params.append('end_date', endDate);
+        
+        window.location.href = '/summary?' + params.toString();
+    });
+
+    // Clear filters
+    document.getElementById('clearFilters').addEventListener('click', () => {
+        window.location.href = '/summary';
+    });
+</script>
+{% endblock %}
+
