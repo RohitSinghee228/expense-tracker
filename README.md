@@ -309,28 +309,5 @@ Modify these in `.env`:
 - `HOST`: Server host (default: 0.0.0.0)
 - `PORT`: Server port (default: 8000)
 
-## 🤝 Contributing
-
-Contributions are welcome! Feel free to:
-- Report bugs
-- Suggest features
-- Submit pull requests
-
-## 📝 License
-
-This project is open source and available under the MIT License.
-
-## 👤 Author
-
-Created as an intern assignment project to demonstrate full-stack development skills.
-
-## 🙏 Acknowledgments
-
-- FastAPI for the excellent web framework
-- SQLModel for the intuitive ORM
-- The Python community for amazing tools and libraries
-
----
-
 **Happy Expense Tracking! 💰📊**
 
