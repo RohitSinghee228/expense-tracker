@@ -1,12 +1,9 @@
-# 💰 Expense Tracker
+# Expense Tracker
 
 A modern, full-stack expense tracking web application built with FastAPI and featuring a beautiful, responsive UI.
 
-![Python](https://img.shields.io/badge/python-3.8+-blue.svg)
-![FastAPI](https://img.shields.io/badge/FastAPI-0.104+-green.svg)
-![License](https://img.shields.io/badge/license-MIT-blue.svg)
 
-## 📋 Table of Contents
+## Table of Contents
 
 - [Features](#features)
 - [Tech Stack](#tech-stack)
@@ -17,22 +14,22 @@ A modern, full-stack expense tracking web application built with FastAPI and fea
 - [Testing](#testing)
 - [Screenshots](#screenshots)
 
-## ✨ Features
+## Features
 
 ### Core Features
-- ➕ **Add Expenses**: Record expenses with amount, category, date, and description
-- 📊 **View All Expenses**: See all your expenses in a clean, organized table
-- 📈 **Summary Dashboard**: View total spending and category-wise breakdown
-- 💾 **SQLite Database**: Persistent local storage for all expense data
+- **Add Expenses**: Record expenses with amount, category, date, and description
+- **View All Expenses**: See all your expenses in a clean, organized table
+- **Summary Dashboard**: View total spending and category-wise breakdown
+- **SQLite Database**: Persistent local storage for all expense data
 
 ### Bonus Features
-- 🔍 **Advanced Filtering**: Filter expenses by category and date range
-- 📥 **CSV Export**: Download all expenses as a CSV file
-- 📱 **Responsive Design**: Beautiful UI that works on all devices
-- 🎨 **Modern UI**: Clean, gradient-based design with smooth animations
-- ✅ **Full Test Coverage**: Comprehensive pytest test suite
+- **Advanced Filtering**: Filter expenses by category and date range
+- **CSV Export**: Download all expenses as a CSV file
+- **Responsive Design**: Beautiful UI that works on all devices
+- **Modern UI**: Clean, gradient-based design with smooth animations
+- **Full Test Coverage**: Comprehensive pytest test suite
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **Backend**: FastAPI (Python)
 - **Frontend**: HTML5 + Jinja2 Templates + CSS3
@@ -41,7 +38,7 @@ A modern, full-stack expense tracking web application built with FastAPI and fea
 - **Testing**: pytest + httpx
 - **Environment**: Python virtual environment (conda/venv)
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 expense-tracker/
@@ -71,7 +68,7 @@ expense-tracker/
 └── README.md                    # This file
 ```
 
-## 🚀 Installation
+## Installation
 
 ### Prerequisites
 
@@ -116,7 +113,7 @@ ENVIRONMENT=development
 
 You can modify these settings if needed.
 
-## 💻 Usage
+## Usage
 
 ### Starting the Application
 
@@ -142,7 +139,7 @@ The application will start on `http://localhost:8000`
 - **API Documentation**: `http://localhost:8000/docs` (Swagger UI)
 - **Alternative API Docs**: `http://localhost:8000/redoc`
 
-## 📡 API Documentation
+## API Documentation
 
 ### Endpoints
 
@@ -216,7 +213,7 @@ GET /export
 
 Downloads a CSV file with all expenses.
 
-## 🧪 Testing
+## Testing
 
 Run the test suite:
 
@@ -239,16 +236,16 @@ pytest -v
 ### Test Coverage
 
 The test suite includes:
-- ✅ Adding expenses (valid and invalid)
-- ✅ Retrieving all expenses
-- ✅ Filtering by category
-- ✅ Filtering by date range
-- ✅ Summary calculations
-- ✅ CSV export functionality
-- ✅ Page rendering
-- ✅ Model validation
+- Adding expenses (valid and invalid)
+- Retrieving all expenses
+- Filtering by category
+- Filtering by date range
+- Summary calculations
+- CSV export functionality
+- Page rendering
+- Model validation
 
-## 🎨 Features Walkthrough
+## Features Walkthrough
 
 ### Adding an Expense
 
@@ -284,7 +281,7 @@ The test suite includes:
 2. Download a CSV file with all expense data
 3. Open in Excel, Google Sheets, or any spreadsheet application
 
-## 🎯 Learning Outcomes
+## Learning Outcomes
 
 This project demonstrates:
 
@@ -297,7 +294,7 @@ This project demonstrates:
 7. **Dependency Management**: Professional Python project setup
 8. **Environment Configuration**: Using .env files for configuration
 
-## 🔧 Configuration
+## Configuration
 
 ### Database
 
@@ -309,5 +306,5 @@ Modify these in `.env`:
 - `HOST`: Server host (default: 0.0.0.0)
 - `PORT`: Server port (default: 8000)
 
-**Happy Expense Tracking! 💰📊**
+**Happy Expense Tracking!**
 
