@@ -13,11 +13,11 @@ from app.routes import router
 async def lifespan(app: FastAPI):
     """Application lifespan manager"""
     # Startup: Initialize database
-    print("🚀 Starting Expense Tracker application...")
+    print("Starting Expense Tracker application...")
     init_database()
     yield
     # Shutdown
-    print("👋 Shutting down application...")
+    print("Shutting down application...")
 
 
 # Create FastAPI application

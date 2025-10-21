@@ -6,7 +6,7 @@
 <!-- Filter Section -->
 <div class="card">
     <div class="card-header">
-        🔍 Filter Summary
+        Filter Summary
     </div>
     
     <form id="filterForm" class="filter-section">
@@ -45,19 +45,19 @@
 <!-- Summary Cards -->
 <div class="summary-grid">
     <div class="summary-card">
-        <h3>💵 Total Expenses</h3>
-        <div class="value">${{ "%.2f"|format(summary.total_expenses) }}</div>
+        <h3>Total Expenses</h3>
+        <div class="value">₹{{ "%.2f"|format(summary.total_expenses) }}</div>
         <div class="label">Across all categories</div>
     </div>
     
     <div class="summary-card" style="background: linear-gradient(135deg, #10b981, #059669);">
-        <h3>📊 Total Transactions</h3>
+        <h3>Total Transactions</h3>
         <div class="value">{{ summary.total_count }}</div>
         <div class="label">Expense entries</div>
     </div>
     
     <div class="summary-card" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
-        <h3>🏷️ Categories</h3>
+        <h3>Categories</h3>
         <div class="value">{{ summary.category_breakdown|length }}</div>
         <div class="label">Unique categories</div>
     </div>
@@ -66,7 +66,7 @@
 <!-- Category Breakdown -->
 <div class="card">
     <div class="card-header">
-        📈 Category Breakdown
+        Category Breakdown
     </div>
     
     {% if summary.category_breakdown %}
@@ -83,7 +83,7 @@
                 </div>
             </div>
             <div class="category-amount">
-                <div class="amount">${{ "%.2f"|format(category.total) }}</div>
+                <div class="amount">₹{{ "%.2f"|format(category.total) }}</div>
                 <div style="font-size: 0.85rem; color: var(--text-secondary);">
                     {% if summary.total_expenses > 0 %}
                     {{ "%.1f"|format((category.total / summary.total_expenses) * 100) }}% of total
@@ -108,7 +108,7 @@
 {% if summary.category_breakdown %}
 <div class="card">
     <div class="card-header">
-        📊 Visual Distribution
+        Visual Distribution
     </div>
     
     <div style="padding: 1rem 0;">
@@ -117,7 +117,7 @@
         <div style="margin-bottom: 1.5rem;">
             <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
                 <span style="font-weight: 600;">{{ category.category }}</span>
-                <span style="color: var(--text-secondary);">${{ "%.2f"|format(category.total) }} ({{ "%.1f"|format(percentage) }}%)</span>
+                <span style="color: var(--text-secondary);">₹{{ "%.2f"|format(category.total) }} ({{ "%.1f"|format(percentage) }}%)</span>
             </div>
             <div style="background: var(--bg-color); border-radius: 9999px; height: 12px; overflow: hidden;">
                 <div style="background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); height: 100%; width: {{ percentage }}%; transition: width 0.5s ease;"></div>

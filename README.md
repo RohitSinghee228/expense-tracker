@@ -306,5 +306,13 @@ Modify these in `.env`:
 - `HOST`: Server host (default: 0.0.0.0)
 - `PORT`: Server port (default: 8000)
 
+## Screenshots
+
+### Home Page - Add and View Expenses
+![Home Page](resources/image_1.png)
+
+### Summary Dashboard
+![Summary Dashboard](resources/image_2.png)
+
 **Happy Expense Tracking!**
 

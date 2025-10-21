@@ -35,5 +35,5 @@ def get_session():
 def init_database():
     """Initialize the database"""
     create_db_and_tables()
-    print(f"✓ Database initialized at: {DATABASE_PATH}")
+    print(f"Database initialized at: {DATABASE_PATH}")
 
